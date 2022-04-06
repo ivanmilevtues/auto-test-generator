@@ -13,5 +13,8 @@ class TestSum(unittest.TestCase):
         tc = TestableClass(-2, 2)
         self.assertEqual(tc.sum(), 0, "Should be 0")
 
+    def test_sum_2(self):
+       assert TestableClass(1, 2).sum() == 3
+
 if __name__ == '__main__':
     unittest.main()
