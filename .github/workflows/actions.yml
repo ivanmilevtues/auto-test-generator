@@ -28,7 +28,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Download results from the generate job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: changelog
       - name: Add artifacts to repo
