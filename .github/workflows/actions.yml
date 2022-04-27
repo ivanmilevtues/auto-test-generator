@@ -1,5 +1,6 @@
 name: Auto-Test-Generator
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
