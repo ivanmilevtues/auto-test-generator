@@ -19,7 +19,7 @@ def strip_commits(commits):
 
 def overwrite_changelog(commits):
     print("Going to write the following commits: \n{}".format(commits))
-    with open("/github/home/CHANGELOG.md", "w+") as f:
+    with open("./CHANGELOG.md", "w+") as f:
         f.write("# CHANGELOG \n\n ## Features:\n\n")
         for feat in commits:
             if re.findall(r"^feat", feat):
@@ -36,7 +36,7 @@ def overwrite_changelog(commits):
 
 def main():
     commits = get_commit_log()
-    commits = strip_commits()
+    commits = strip_commits(commits)
     overwrite_changelog(commits)
 
 if __name__ == "__main__":
