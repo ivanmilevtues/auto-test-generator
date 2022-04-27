@@ -31,8 +31,8 @@ jobs:
           name: changelog
       - name: Add artifacts to repo
       run: |
-      git config --global user.name "ivanmilevtues"
-      git config -- gloabl user.email "ivanmilevtues@gmail.com"
-      git add --all
-      git commit -m "docs: generated changelog for PR"
-      git push
+        git config --global user.name "ivanmilevtues"
+        git config -- gloabl user.email "ivanmilevtues@gmail.com"
+        git add --all
+        git commit -m "docs: generated changelog for PR"
+        git push
