@@ -1,0 +1,38 @@
+name: Auto-Test-Generator
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  generate:
+    name: Changelog Generator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create Changelog
+        uses: ./
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: changelog
+          path: /home/runner/work/_temp/_github_home/CHANGELOG.md
+  upload:
+    name: Upload Changelog to PR
+    runs-on: ubuntu-latest
+    needs: generate
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Download results from the generate job
+        with:
+          name: changelog
+      - name: Add artifacts to repo
+      run: |
+      git config --global user.name "ivanmilevtues"
+      git config -- gloabl user.email "ivanmilevtues@gmail.com"
+      git add --all
+      git commit -m "docs: generated changelog for PR"
+      git push

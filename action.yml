@@ -1,0 +1,12 @@
+name: "Auto-generation action"
+author: "Ivan Milev"
+description: "Generates test cases"
+outputs:
+  changelog:
+    description: "Changelog.md file has been added to the Pull-request"
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: 'book'
+  color: 'blue'
