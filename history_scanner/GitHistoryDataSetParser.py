@@ -1,7 +1,7 @@
-import ast
 import pickle
 from pydriller import Repository, ModificationType
 from history_scanner.CommitData import CommitData
+from history_scanner.commit_file import CommitFile
 
 
 class GitHistoryDataSetParser:
@@ -22,20 +22,9 @@ class GitHistoryDataSetParser:
         return self.parsed_data
 
     def process_commit(self, commit) -> CommitData:
-        py_sources, test_sources = self.__get_edited_files_source(commit)
-        print(f"{len(py_sources)}|{len(test_sources)}")
-        if len(py_sources) > 0 and len(test_sources) > 0:
-            return CommitData(commit.msg, self.__try_parse(py_sources), test_sources)
-
-    @staticmethod
-    def __try_parse(sources):
-        res = []
-        for source in sources:
-            try:
-                res.append(ast.parse(source))
-            except:
-                continue
-        return res
+        py_files, test_files = self.__get_edited_files_source(commit)
+        if len(py_files) > 0 and len(test_files) > 0:
+            return CommitData(commit.msg, py_files, test_files)
 
     def __get_edited_files_source(self, commit) -> [str]:
         if not self.__has_test_additions(commit):
@@ -46,11 +35,15 @@ class GitHistoryDataSetParser:
         for file in commit.modified_files:
             if file.filename.endswith(".py") and file.change_type != ModificationType.DELETE:
                 if self.__contains_modified_tests(file):
-                    test_files.append(file)
+                    parsed_file = CommitFile(file.filename, file.source_code)
+                    if parsed_file.source_ast is not None:
+                        test_files.append(parsed_file)
                 elif not self.__file_is_test(file):
-                    py_files.append(file)
+                    parsed_file = CommitFile(file.filename, file.source_code)
+                    if parsed_file.source_ast is not None:
+                        py_files.append(parsed_file)
 
-        return [py_file.source_code for py_file in py_files], [test_file.source_code for test_file in test_files]
+        return py_files, test_files
 
     def __has_test_additions(self, commit) -> bool:
         return len([self.__file_is_test(file) for file in commit.modified_files]) != 0
