@@ -15,19 +15,20 @@ class CommitData:
         return f"""
 ### Python3
 #
-# {self.__source_str()}
+# {self.__source_str()[:4000]}
 #
 ### Generate tests for {self.commit_msg}
+class Test
         """
 
     def rank_source_files(self):
         for file in self.source_files:
-            for definition in file.source:
+            for definition in file.source_ast.body:
                 if isinstance(definition, Import) or isinstance(definition, ImportFrom):
                     for name in definition.names:
-                        if self.is_referencing_file_from_project(name):
+                        if self.is_referencing_file_from_project(name.name):
                             file.rank_up()
-        self.source_files = sorted(self.source_files, key=lambda f: f.ranking_score)
+        self.source_files = sorted(self.source_files, key=lambda f: (f.ranking_score, len(f.source)), reverse=True)
         return self.source_files
 
     def is_referencing_file_from_project(self, import_name):
