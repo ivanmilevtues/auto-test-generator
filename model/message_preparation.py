@@ -7,10 +7,7 @@ class MessageBuilder:
         self.commits_data = commits_data
         self.train = train
 
-    def get_train_messages(self):
+    def create_prompt(self):
         data_for_training = self.commits_data[:int(len(self.commits_data) * self.train)]
         for data in data_for_training:
             yield data.construct_prompt()
-
-    def get_test_messages(self):
-        pass

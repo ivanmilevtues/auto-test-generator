@@ -3,6 +3,8 @@ from ast import Import, ImportFrom
 
 from history_scanner.commit_file import CommitFile
 
+MAX_ALLOWED_TOKENS = 4000
+
 
 class CommitData:
     def __init__(self, commit_msg: str, source_files: [CommitFile], test_files: [CommitFile]):
@@ -12,14 +14,13 @@ class CommitData:
 
     def construct_prompt(self):
         self.rank_source_files()
-        return f"""
+        return f'''
 ### Python3
-#
-# {self.__source_str()[:4000]}
-#
-### Generate tests for {self.commit_msg}
-class Test
-        """
+{self.__source_str()}
+"""
+Test class which tests {self.commit_msg}
+"""
+class Test'''
 
     def rank_source_files(self):
         for file in self.source_files:
@@ -35,7 +36,16 @@ class Test
         return bool([file for file in self.source_files if import_name in file.filename])
 
     def __source_str(self):
-        return "".join([ast.dump(file.source_ast) for file in self.source_files])
+        sources = ""
+        for file in self.source_files:
+            if len(sources.split(r'\s')) + len(file.source.split(r'\s')) < MAX_ALLOWED_TOKENS:
+                sources += '\n' + file.source
+                # TODO: Think if this is optimal probably I should have more than one test case scenarios
+                # Think on how to differentiate different AC: tasks. Probably only the "Controller" or the entry
+                # point is to be tested for the purpose of E2E/functional testing
+            else:
+                break
+        return sources
 
     def __test_str(self):
         return "".join([file_ast for file_ast in self.test_files if file_ast is not None])
