@@ -1,6 +1,7 @@
 import openai
 import os
 import re
+import ast
 
 from model.message_preparation import MessageBuilder
 from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
@@ -16,7 +17,7 @@ class Model:
         self.prompt = prompt
         response = openai.Completion.create(
             engine="code-davinci-002",
-            prompt=f"{prompt}",
+            prompt=prompt,
             temperature=0,
             max_tokens=256,
             top_p=1,
@@ -33,7 +34,7 @@ class Model:
             print("WARN: couldn't make compilable for code")
             return ""
         try:
-            exec(code)
+            ast.parse(code)
             return self.__get_only_generated_code(code)
         except SyntaxError as e:
             lines = code.split("\n")
@@ -51,14 +52,14 @@ class Model:
 def main():
     parser = GitHistoryDataSetParser("./")
     data = parser.load_data("history_scanner/test_save.dat")
-    messages = MessageBuilder(data)
+    messages = MessageBuilder(data[:5])
     model = Model()
     for message in messages.create_prompt():
         test = model.create_test(message)
         print(f"""
         =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-        Generated test for: {message}
-        The test is:{test}
+        The commit message is: {message}
+        Generated test is:\n{test}
         """)
 
 

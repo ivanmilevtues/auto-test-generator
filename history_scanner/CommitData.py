@@ -14,11 +14,11 @@ class CommitData:
 
     def construct_prompt(self):
         self.rank_source_files()
-        return f'''
-### Python3
+        return f'''### Python3
 {self.__source_str()}
 """
-Test class which tests {self.commit_msg}
+Test class which uses unittest.TestCase. 
+The class tests {self.commit_msg}.
 """
 class Test'''
 
