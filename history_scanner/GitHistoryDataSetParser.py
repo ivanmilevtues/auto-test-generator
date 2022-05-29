@@ -24,7 +24,9 @@ class GitHistoryDataSetParser:
     def process_commit(self, commit) -> CommitData:
         py_files, test_files = self.__get_edited_files_source(commit)
         if len(py_files) > 0 and len(test_files) > 0:
-            return CommitData(commit.msg, py_files, test_files)
+            commit_data = CommitData(commit.msg, py_files, test_files)
+            print(commit_data)
+            return commit_data
 
     def __get_edited_files_source(self, commit) -> [str]:
         if not self.__has_test_additions(commit):
@@ -34,11 +36,11 @@ class GitHistoryDataSetParser:
 
         for file in commit.modified_files:
             if file.filename.endswith(".py") and file.change_type != ModificationType.DELETE:
-                if self.__contains_modified_tests(file):
+                if self.__is_test_file(file):
                     parsed_file = CommitFile(file.filename, file.source_code)
                     if parsed_file.source_ast is not None:
                         test_files.append(parsed_file)
-                elif not self.__file_is_test(file):
+                elif self.__has_additions(file):
                     parsed_file = CommitFile(file.filename, file.source_code)
                     if parsed_file.source_ast is not None:
                         py_files.append(parsed_file)
@@ -46,16 +48,16 @@ class GitHistoryDataSetParser:
         return py_files, test_files
 
     def __has_test_additions(self, commit) -> bool:
-        return len([self.__file_is_test(file) for file in commit.modified_files]) != 0
-
-    def __file_is_test(self, modified_file) -> bool:
-        return self.__contains_modified_tests(modified_file) and \
-               len(modified_file.methods) > len(modified_file.methods_before)
+        return len([self.__has_additions(file) for file in commit.modified_files]) != 0
 
     @staticmethod
-    def __contains_modified_tests(modified_file):
-        return modified_file.new_path is not None and \
-               ("tests/" in modified_file.new_path or "tests\\" in modified_file.new_path)
+    def __has_additions(modified_file) -> bool:
+        return len(modified_file.methods) > len(modified_file.methods_before)
+
+    @staticmethod
+    def __is_test_file(modified_file):
+        return modified_file.new_path is not None and "test" in modified_file.new_path and \
+               "__init__" not in modified_file.new_path
 
     def save_parsed_data(self, file_path):
         if not self.parsed_data:

@@ -1,9 +1,12 @@
 import ast
-from ast import Import, ImportFrom
+from ast import Import, ImportFrom, ClassDef
+import re
 
 from history_scanner.commit_file import CommitFile
 
-MAX_ALLOWED_TOKENS = 4000
+MAX_ALLOWED_TOKENS = 2000 # 8K is the limit and 1,5K words are 2K tokens
+
+TOP_FILES = 3
 
 
 class CommitData:
@@ -14,8 +17,13 @@ class CommitData:
 
     def construct_prompt(self):
         self.rank_source_files()
-        return f'''### Python3
-{self.__source_str()}
+        related_files = set(file for file in self.source_files if self.__contains_class(file.source_ast.body))
+        for file in self.source_files[:TOP_FILES]:
+            related_files.add(file)
+
+        for file in related_files:
+            yield f'''### Python3
+{self.__get_limited_tokens(file.source)}
 """
 Test class which uses unittest.TestCase. 
 The class tests {self.commit_msg}.
@@ -35,6 +43,22 @@ class Test'''
     def is_referencing_file_from_project(self, import_name):
         return bool([file for file in self.source_files if import_name in file.filename])
 
+    def __contains_class(self, ast_body):
+        lowered_message = self.commit_msg.lower()
+        for element in ast_body:
+            if isinstance(element, ClassDef) and element.name.lower() in lowered_message:
+                return True
+        return False
+
+    def __get_limited_tokens(self, file_source):
+        tokens = re.split(r'\s+', file_source)
+        if len(tokens) >= MAX_ALLOWED_TOKENS:
+            file_source = " ".join([self.__remove_comments(token) for token in tokens])
+        return file_source
+
+    def __remove_comments(self, token):
+        return "".join(re.split(r"#.+\n", token))[:MAX_ALLOWED_TOKENS]
+
     def __source_str(self):
         sources = ""
         for file in self.source_files:
@@ -52,6 +76,6 @@ class Test'''
 
     def __str__(self):
         string = f"{self.commit_msg}: \n"
-        string += "\n\nSource: \n\n".join([ast.dump(file_ast) for file_ast in self.source_files])
-        string += "\n\nTest: \n\n".join([file_ast for file_ast in self.test_files if file_ast is not None])
+        string += f"{[file.filename for file in self.source_files]}\n"
+        string += f"{[file.filename for file in self.test_files]}\n"
         return string
