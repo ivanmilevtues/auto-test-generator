@@ -4,7 +4,7 @@ import re
 
 from history_scanner.commit_file import CommitFile
 
-MAX_ALLOWED_TOKENS = 2000 # 8K is the limit and 1,5K words are 2K tokens
+MAX_ALLOWED_TOKENS = 2000  # 8K is the limit and 1,5K words are 2K tokens
 
 TOP_FILES = 3
 

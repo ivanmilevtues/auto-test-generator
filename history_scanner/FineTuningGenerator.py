@@ -54,12 +54,20 @@ Generate tests which test: {message}
 
 
 class PromptLine:
-    def __init__(self, prompt, completion):
-        self.prompt = prompt
-        self.completion = completion
+
+    STRING_TRANSLATION = str.maketrans({
+        '\n': '\\n',
+        '\r': '\\r',
+        '"': '\\"',
+        "\t": "\\t"
+    })
+
+    def __init__(self, prompt: str, completion: str):
+        self.prompt = prompt.translate(PromptLine.STRING_TRANSLATION)
+        self.completion = completion.translate(PromptLine.STRING_TRANSLATION)
 
     def __str__(self):
-        return '{"prompt": "%s", "completion": "%s"}' % (self.prompt, self.completion)
+        return '{"prompt": "%s", "completion": "%s"}\n' % (self.prompt, self.completion)
 
     def __repr__(self):
         return self.__str__()
