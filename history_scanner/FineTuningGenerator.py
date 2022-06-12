@@ -1,5 +1,6 @@
 from functools import reduce
 from ast import Import, ImportFrom
+import pandas as pd
 
 from history_scanner.CommitData import CommitData
 
@@ -13,14 +14,13 @@ class FineTuningGenerator:
         pass
 
     def save(self, filename: str):
-        if not self.prompts:
+        if self.prompts is None:
             raise Exception("Prompt is not generated. Please run generate_prompt_lines before calling the save method.")
-        with open(filename, 'w', encoding="utf-8") as f:
-            f.writelines([str(prompt) for prompt in self.prompts])
+        self.prompts.to_json(filename, orient='records', lines=True)
 
     def generate_prompt_lines(self):
         prompts = [self.__generate_prompts(commit) for commit in self.commits]
-        self.prompts = reduce(list.__add__, prompts)
+        self.prompts = pd.DataFrame(reduce(list.__add__, prompts), columns=['prompt', 'completion'])
         return self.prompts
 
     def __generate_prompts(self, commit: CommitData):
@@ -41,36 +41,16 @@ class FineTuningGenerator:
 
     @staticmethod
     def __generate_prompt(message, source_file, test_file):
-        return PromptLine(f'''Python3
+        return (f'''Python3
 {source_file.source}
 """
 Generate tests which test: {message}
 """
-''', test_file.source)
+''', ' ' + test_file.source)
 
     @staticmethod
     def __is_referencing_file_from_project(source_files, import_name):
         return [file for file in source_files if import_name in file.filename]
-
-
-class PromptLine:
-
-    STRING_TRANSLATION = str.maketrans({
-        '\n': '\\n',
-        '\r': '\\r',
-        '"': '\\"',
-        "\t": "\\t"
-    })
-
-    def __init__(self, prompt: str, completion: str):
-        self.prompt = prompt.translate(PromptLine.STRING_TRANSLATION)
-        self.completion = completion.translate(PromptLine.STRING_TRANSLATION)
-
-    def __str__(self):
-        return '{"prompt": "%s", "completion": "%s"}\n' % (self.prompt, self.completion)
-
-    def __repr__(self):
-        return self.__str__()
 
 
 if __name__ == '__main__':
