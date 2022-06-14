@@ -72,7 +72,7 @@ class GitHistoryDataSetParser:
 
 
 if __name__ == "__main__":
-    repo_parser = GitHistoryDataSetParser("../test_folder/flask")
+    repo_parser = GitHistoryDataSetParser("../dataset_repos/flask")
     repo_parser.parse_data()
     repo_parser.save_parsed_data("test_save.dat")
     print(len(repo_parser.get_parsed_data()))
