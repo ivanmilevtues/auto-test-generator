@@ -6,7 +6,7 @@ from history_scanner.commit_file import CommitFile
 
 class GitHistoryDataSetParser:
 
-    def __init__(self, repository_path = "./"):
+    def __init__(self, repository_path="./"):
         self.git_repo = Repository(repository_path, only_in_branch="main", only_modifications_with_file_types=[".py"],
                                    include_deleted_files=False)
         self.parsed_data = []
@@ -24,7 +24,7 @@ class GitHistoryDataSetParser:
     def process_commit(self, commit) -> CommitData:
         py_files, test_files = self.__get_edited_files_source(commit)
         if len(py_files) > 0 and len(test_files) > 0:
-            commit_data = CommitData(commit.msg, py_files, test_files)
+            commit_data = CommitData(commit.hash, commit.msg, py_files, test_files)
             print(commit_data)
             return commit_data
 

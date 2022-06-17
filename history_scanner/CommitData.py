@@ -2,6 +2,7 @@ import ast
 from ast import Import, ImportFrom, ClassDef
 import re
 
+from history_scanner.Prompt import Prompt
 from history_scanner.commit_file import CommitFile
 
 MAX_ALLOWED_TOKENS = 2000  # 8K is the limit and 1,5K words are 2K tokens
@@ -10,7 +11,8 @@ TOP_FILES = 3
 
 
 class CommitData:
-    def __init__(self, commit_msg: str, source_files: [CommitFile], test_files: [CommitFile]):
+    def __init__(self, commit_id: str, commit_msg: str, source_files: [CommitFile], test_files: [CommitFile]):
+        self.commit_id = commit_id
         self.commit_msg = commit_msg
         self.source_files = source_files
         self.test_files = test_files
@@ -22,13 +24,7 @@ class CommitData:
             related_files.add(file)
 
         for file in related_files:
-            yield f'''### Python3
-{self.__get_limited_tokens(file.source)}
-"""
-Test class which uses unittest.TestCase. 
-The class tests {self.commit_msg}.
-"""
-class Test'''
+            yield Prompt(self.__get_limited_tokens(file.source), self.commit_msg)
 
     def rank_source_files(self):
         for file in self.source_files:
