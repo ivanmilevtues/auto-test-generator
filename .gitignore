@@ -131,4 +131,4 @@ dmypy.json
 # Do not track datasets
 datasets/*.json
 
-test_folder/
+dataset_repos/
