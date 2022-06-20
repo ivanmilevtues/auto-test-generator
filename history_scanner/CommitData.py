@@ -19,11 +19,9 @@ class CommitData:
 
     def construct_prompt(self):
         self.rank_source_files()
-        related_files = set(file for file in self.source_files if self.__contains_class(file.source_ast.body))
-        for file in self.source_files[:TOP_FILES]:
-            related_files.add(file)
-
-        for file in related_files:
+        ranked_files = [file for file in self.source_files
+                        if self.__contains_class(file.source_ast.body)] + self.source_files
+        for file in ranked_files[:TOP_FILES]:
             yield Prompt(self.__get_limited_tokens(file.source), self.commit_msg)
 
     def rank_source_files(self):
@@ -52,7 +50,8 @@ class CommitData:
             file_source = " ".join([self.__remove_comments(token) for token in tokens])
         return file_source
 
-    def __remove_comments(self, token):
+    @staticmethod
+    def __remove_comments(token):
         return "".join(re.split(r"#.+\n", token))[:MAX_ALLOWED_TOKENS]
 
     def __source_str(self):

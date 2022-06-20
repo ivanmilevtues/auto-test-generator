@@ -6,16 +6,23 @@ class GeneratedTestSaver:
 
     BRANCH_ID = 0
 
-    def __init__(self, repository_path: str, commit_id: str):
+    def __init__(self, repository_path: str, commit_id: str, directory_prefix: str = 'generated_tests'):
         self.repository_path = repository_path
         self.commit_id = commit_id
+        self.directory_prefix = directory_prefix
 
-    def save_test_file(self, test_code, filename):
+    def save_test_file(self, prompt, test_code, filename):
         path = f"{self.repository_path}/generated_tests/{filename}.py"
+        source_code = f'''
+# Test generated for {self.commit_id}
+import {prompt.test_lib}
+def test_{test_code}
+'''
         os.makedirs(os.path.dirname(path), exist_ok=True)
         print(f"Saving tests to '{path}'.")
         with open(path, "w") as f:
-            f.write(test_code)
+            f.write(source_code)
+        return path
 
     def goto_commit(self):
         subprocess.run(["git", "checkout", "-b", f"generated_tests_{GeneratedTestSaver.BRANCH_ID}", self.commit_id],

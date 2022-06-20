@@ -2,6 +2,7 @@ import openai
 import os
 import re
 import ast
+import time
 
 
 class Model:
@@ -17,20 +18,28 @@ class Model:
         code_with_test = self.__compile_code(code_with_test)
         return self.__get_only_generated_code(code_with_test)
 
-    @staticmethod
-    def complete(prompt):
-        response = openai.Completion.create(
-            engine="code-davinci-002",
-            prompt=prompt,
-            temperature=0,
-            max_tokens=256,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0,
-            echo=True,
-            stop=["#"]
-        )
-        return response.choices[0]['text']
+    def complete(self, prompt, depth=2):
+        try:
+            if depth == 0:
+                print(f"WARN: Couldn't generate code for {prompt}")
+                return ""
+            response = openai.Completion.create(
+                engine="code-davinci-002",
+                prompt=prompt,
+                temperature=0,
+                max_tokens=256,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0,
+                echo=True,
+                stop=["#"]
+            )
+            return response.choices[0]['text']
+        except Exception as e:
+            print(e)
+            print("Sleeping for a minute to reduce rate limiting.")
+            time.sleep(60)
+            return self.complete(prompt, depth-1)
 
     def complete_test(self, code):
         generated_code = code[:len(self.original_prompt)]
