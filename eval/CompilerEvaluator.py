@@ -26,10 +26,12 @@ class CompilerEvaluator:
             return subprocess.run(command, check=True, stdout=subprocess.PIPE, shell=True, cwd=self.repository).stdout
         except subprocess.CalledProcessError as e:
             print("Failed to run command: ", e)
-            return 0
         except Exception as e:
             print("Generic exception while compilation evaluation: ", e)
-            return 0
+        if '&' in command:
+            print("Retrying evaluation")
+            return self.run_subprocess(command.split('&')[-1].strip())
+        return 0
 
     def export(self, filename="compiler_evaluation.csv"):
         self.df.to_csv(filename)

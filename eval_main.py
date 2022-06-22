@@ -12,7 +12,7 @@ model = Model()
 
 def main():
     bleu = BLEUEvaluator()
-    compiler = CompilerEvaluator(Path("../dataset_repos/flask"), "env\\Scripts\\activate")
+    compiler = CompilerEvaluator(Path("dataset_repos/flask"), "env\\Scripts\\activate")
     parser = GitHistoryDataSetParser("dataset_repos/flask")
     # parser.parse_data()
     # parser.save_parsed_data("dataset_repos/data/flask_test.dat")
@@ -27,7 +27,7 @@ def main():
             try:
                 test = model.generate_test(str(prompt))
                 file_path = saver.save_test_file(prompt, test, f'test_{uuid.uuid4()}')
-                bleu.evaluate(test, commit.test_files, commit.commit_id)
+                bleu.evaluate(test, [f.source for f in commit.test_files], commit.commit_id)
                 compiler.evaluate(file_path)
             except Exception as e:
                 print(e)
