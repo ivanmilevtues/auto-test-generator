@@ -12,16 +12,16 @@ model = Model()
 
 def main():
     bleu = BLEUEvaluator()
-    compiler = CompilerEvaluator(Path("dataset_repos/flask"), "env\\Scripts\\activate")
-    parser = GitHistoryDataSetParser("dataset_repos/flask")
+    compiler = CompilerEvaluator(Path("dataset_repos/httpie"), "venv\\Scripts\\activate")
+    parser = GitHistoryDataSetParser("dataset_repos/httpie", branch="master")
     # parser.parse_data()
-    # parser.save_parsed_data("dataset_repos/data/flask_test.dat")
+    # parser.save_parsed_data("dataset_repos/data/httpie_commits.dat")
     # data = parser.get_parsed_data()
-    data = parser.load_data("dataset_repos/data/flask_test.dat")
+    data = parser.load_data("dataset_repos/data/httpie_commits.dat")
     print(f"Generating tests for {len(data)} commits")
 
     for commit in data:
-        saver = GeneratedTestSaver(str(Path("dataset_repos/flask").absolute()), commit.commit_id)
+        saver = GeneratedTestSaver(str(Path("dataset_repos/httpie").absolute()), commit.commit_id, main_branch="master")
         saver.goto_commit()
         for prompt in commit.construct_prompt():
             try:

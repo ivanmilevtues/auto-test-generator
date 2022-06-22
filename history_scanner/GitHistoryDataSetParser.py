@@ -6,8 +6,8 @@ from history_scanner.commit_file import CommitFile
 
 class GitHistoryDataSetParser:
 
-    def __init__(self, repository_path="./"):
-        self.git_repo = Repository(repository_path, only_in_branch="main", only_modifications_with_file_types=[".py"],
+    def __init__(self, repository_path="./", branch="main"):
+        self.git_repo = Repository(repository_path, only_in_branch=branch, only_modifications_with_file_types=[".py"],
                                    include_deleted_files=False)
         self.parsed_data = []
 
