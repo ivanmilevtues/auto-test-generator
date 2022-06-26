@@ -6,14 +6,18 @@ class GeneratedTestSaver:
 
     BRANCH_ID = 0
 
-    def __init__(self, repository_path: str, commit_id: str, directory_prefix: str = 'generated_tests', main_branch="main"):
+    def __init__(self, repository_path: str, commit_id: str, directory_for_generation: str = 'generated_tests', main_branch="main"):
         self.repository_path = repository_path
         self.commit_id = commit_id
-        self.directory_prefix = directory_prefix
+        self.generated_code_directory = directory_for_generation
         self.main_branch=main_branch
 
+    def init_module(self):
+        init_module = f"{self.repository_path}/{self.generated_code_directory}/__init__.py"
+        open(init_module, "w").close()
+
     def save_test_file(self, prompt, test_code, filename):
-        path = f"{self.repository_path}/generated_tests/{filename}.py"
+        path = f"{self.repository_path}/{self.generated_code_directory}/{filename}.py"
         source_code = f'''
 # Test generated for {self.commit_id}
 import {prompt.test_lib}
@@ -30,7 +34,9 @@ def test_{test_code}
                        check=True, stdout=subprocess.PIPE, cwd=self.repository_path)
 
     def commit_files(self):
-        subprocess.run(["git", "add", "*"],
+        self.init_module()
+
+        subprocess.run(["git", "add", f"{self.generated_code_directory}/*"],
                        check=True, stdout=subprocess.PIPE, cwd=self.repository_path)
         subprocess.run(["git", "commit", "-m", '"Committing generated tests."', "--no-verify", "-n"],
                        check=True, stdout=subprocess.PIPE, cwd=self.repository_path)

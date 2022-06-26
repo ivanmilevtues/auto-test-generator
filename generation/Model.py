@@ -13,10 +13,10 @@ class Model:
 
     def generate_test(self, prompt):
         self.original_prompt = prompt
-        completion = self.complete(self.original_prompt)
-        code_with_test = self.complete_test(completion)
-        code_with_test = self.__compile_code(code_with_test)
-        return self.__get_only_generated_code(code_with_test)
+        completions = self.complete(self.original_prompt)
+        completions = [self.complete_test(completion) for completion in completions]
+        completions = [self.__compile_code(completion) for completion in completions]
+        return [self.__get_only_generated_code(completion) for completion in completions]
 
     def complete(self, prompt, depth=2):
         try:
@@ -28,18 +28,18 @@ class Model:
                 prompt=prompt,
                 temperature=0,
                 max_tokens=256,
-                top_p=1,
+                n=4,
                 frequency_penalty=0,
                 presence_penalty=0,
                 echo=True,
                 stop=["#"]
             )
-            return response.choices[0]['text']
+            return [choice['text'] for choice in response.choices]
         except Exception as e:
             print(e)
             print("Sleeping for a minute to reduce rate limiting.")
             time.sleep(60)
-            return self.complete(prompt, depth-1)
+            return self.complete(prompt, depth - 1)
 
     def complete_test(self, code):
         generated_code = code[:len(self.original_prompt)]
@@ -47,9 +47,9 @@ class Model:
             return code
         if 'test_' in generated_code:
             return self.complete(code + '\n# Generate asserts')
-        return self.complete(code + f'\n# Generate test case method\n{4*" "}def test_')
+        return self.complete(code + f'\n# Generate test case method\n{4 * " "}def test_')
 
-    def __compile_code(self, code, depth=150):
+    def __compile_code(self, code, depth=10):
         if depth == 0:
             print("Couldn't make compilable for code")
             return ""
@@ -60,7 +60,7 @@ class Model:
             lines = code.split("\n")
             line_number = re.findall(self.line_regex, e.__str__())[0]
             lines.pop(int(line_number) - 1)
-            return self.__compile_code("\n".join(lines), depth-1)
+            return self.__compile_code("\n".join(lines), depth - 1)
         except NameError as e:
             print("Name error: ", e)
             return code
