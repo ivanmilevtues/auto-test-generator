@@ -11,7 +11,8 @@ class CompilerEvaluator:
         self.df = pd.DataFrame({"Filename": [], "Python compilation": [], "Pytest run": []})
 
     def evaluate(self, file):
-        compile_result = self.run_subprocess(f'{self.setup_command} & python {file}')
+        self.run_subprocess(f'{self.setup_command}')
+        compile_result = self.run_subprocess(f'python {file}')
         test_result = self.run_subprocess(f'{self.setup_command} & pytest {file}')
         self.df = self.df.append(
             {
