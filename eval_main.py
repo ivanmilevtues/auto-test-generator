@@ -16,9 +16,9 @@ def main():
     bleu = BLEUEvaluator()
     compiler = RuntimeEvaluator(path, setup_command)
     parser = GitHistoryDataSetParser(str(path.absolute()), branch="master")
-    data = parser.get_parsed_data()
-    parser.save_parsed_data("dataset_repos/data/calc_reference_commits.dat")
-    # data = parser.load_data("dataset_repos/data/httpie_reference_commits.dat")
+    # data = parser.get_parsed_data()
+    # parser.save_parsed_data("dataset_repos/data/calc_reference_commits.dat")
+    data = parser.load_data("dataset_repos/data/calc_reference_commits.dat")
 
     print(f"Generating tests for {len(data)} commits")
 
@@ -27,7 +27,7 @@ def main():
     for commit in data:
         saver = GeneratedTestSaver(str(path.absolute()),
                                    commit.commit_id, main_branch="master",
-                                   directory_for_generation="gen_tests_imports")
+                                   directory_for_generation="gen_tests_model_freq")
         saver.goto_commit()
         for prompt in commit.construct_prompt():
             try:
@@ -37,8 +37,8 @@ def main():
                 print(f"Tests for {prompt} not saved", e)
         saver.commit_files()
         saver.clean_state()
-    bleu.export('blue_calculator_imports.csv')
-    compiler.export('compile_calculator_imports.csv')
+    bleu.export('blue_calculator_freq_param.csv')
+    compiler.export('compile_calculator_freq_param.csv')
 
 
 def save_and_eval(tests, saver, bleu, compiler, commit):

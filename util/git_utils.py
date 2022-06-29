@@ -10,5 +10,5 @@ def delete_branches(prefix, number_of_branches, base_dir):
 
 
 if __name__ == "__main__":
-    delete_branches("gen_tests_imports_", 7,
+    delete_branches("gen_tests_model_freq_", 7,
                     'C:\\Users\\Ivan\\PycharmProjects\\auto-test-generator\\dataset_repos\\calculator')

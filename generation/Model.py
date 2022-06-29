@@ -26,10 +26,10 @@ class Model:
             response = openai.Completion.create(
                 engine="code-davinci-002",
                 prompt=prompt,
-                temperature=0,
+                temperature=0.64,
                 max_tokens=256,
-                frequency_penalty=0,
-                presence_penalty=0,
+                frequency_penalty=0.66,
+                presence_penalty=1.25,
                 best_of=5,
                 echo=True,
                 stop=["#"]
