@@ -7,16 +7,16 @@ import time
 
 class Model:
     def __init__(self):
-        self.line_regex = r"line (\d+)"
+        self.line_regex = re.compile(r"line (\d+)")
         self.original_prompt = None
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
     def generate_test(self, prompt):
         self.original_prompt = prompt
-        completions = self.complete(self.original_prompt)
-        completions = [self.complete_test(completion) for completion in completions]
-        completions = [self.__compile_code(completion) for completion in completions]
-        return [self.__get_only_generated_code(completion) for completion in completions]
+        completion = self.complete(self.original_prompt)
+        completion = self.complete_test(completion)
+        generated_code = self.__get_only_generated_code(completion)
+        return generated_code
 
     def complete(self, prompt, depth=2):
         try:
@@ -28,13 +28,13 @@ class Model:
                 prompt=prompt,
                 temperature=0,
                 max_tokens=256,
-                n=4,
                 frequency_penalty=0,
                 presence_penalty=0,
+                best_of=5,
                 echo=True,
                 stop=["#"]
             )
-            return [choice['text'] for choice in response.choices]
+            return response.choices[0]['text']
         except Exception as e:
             print(e)
             print("Sleeping for a minute to reduce rate limiting.")
@@ -52,17 +52,21 @@ class Model:
     def __compile_code(self, code, depth=10):
         if depth == 0:
             print("Couldn't make compilable for code")
-            return ""
+            return code
         try:
             ast.parse(code)
             return code
         except SyntaxError as e:
             lines = code.split("\n")
-            line_number = re.findall(self.line_regex, e.__str__())[0]
+            line_number = re.findall(r"line (\d+)", e.__str__())[0]
+            print("Syntax Error:", line_number, e)
             lines.pop(int(line_number) - 1)
             return self.__compile_code("\n".join(lines), depth - 1)
         except NameError as e:
             print("Name error: ", e)
+            return code
+        except Exception as e:
+            print("Code compilation error: ", e)
             return code
 
     def __get_only_generated_code(self, code):

@@ -1,4 +1,3 @@
-import ast
 from ast import Import, ImportFrom, ClassDef
 import re
 
@@ -18,11 +17,9 @@ class CommitData:
         self.test_files = test_files
 
     def construct_prompt(self):
-        self.rank_source_files()
-        ranked_files = [file for file in self.source_files
-                        if self.__contains_class(file.source_ast.body)] + self.source_files
+        ranked_files = self.rank_source_files()
         for file in ranked_files[:TOP_FILES]:
-            yield Prompt(self.__get_limited_tokens(file.source), self.commit_msg)
+            yield Prompt(file, self.commit_msg)
 
     def rank_source_files(self):
         for file in self.source_files:
@@ -37,19 +34,6 @@ class CommitData:
     def is_referencing_file_from_project(self, import_name):
         return bool([file for file in self.source_files if import_name in file.filename])
 
-    def __contains_class(self, ast_body):
-        lowered_message = self.commit_msg.lower()
-        for element in ast_body:
-            if isinstance(element, ClassDef) and element.name.lower() in lowered_message:
-                return True
-        return False
-
-    def __get_limited_tokens(self, file_source):
-        tokens = re.split(r'\s+', file_source)
-        if len(tokens) >= MAX_ALLOWED_TOKENS:
-            file_source = " ".join([self.__remove_comments(token) for token in tokens])
-        return file_source
-
     @staticmethod
     def __remove_comments(token):
         return "".join(re.split(r"#.+\n", token))[:MAX_ALLOWED_TOKENS]
@@ -59,9 +43,6 @@ class CommitData:
         for file in self.source_files:
             if len(sources.split(r'\s')) + len(file.source.split(r'\s')) < MAX_ALLOWED_TOKENS:
                 sources += '\n' + file.source
-                # TODO: Think if this is optimal probably I should have more than one test case scenarios
-                # Think on how to differentiate different AC: tasks. Probably only the "Controller" or the entry
-                # point is to be tested for the purpose of E2E/functional testing
             else:
                 break
         return sources
@@ -74,3 +55,6 @@ class CommitData:
         string += f"{[file.filename for file in self.source_files]}\n"
         string += f"{[file.filename for file in self.test_files]}\n"
         return string
+
+    def __repr__(self):
+        return self.__str__()

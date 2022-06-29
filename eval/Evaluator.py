@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 from eval.BLEUEvaluator import BLEUEvaluator
-from eval.CompilerEvaluator import CompilerEvaluator
+from eval.RuntimeEvaluator import RuntimeEvaluator
 from history_scanner.CommitData import CommitData
 from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 
@@ -11,7 +11,7 @@ from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 class Evaluator:
     def __init__(self, repository: Path, branch_prefix: str, setup_command: str, number_of_commits: int,
                  commits: [CommitData]):
-        self.compiler_eval = CompilerEvaluator(repository, setup_command)
+        self.compiler_eval = RuntimeEvaluator(repository, setup_command)
         self.bleu_eval = BLEUEvaluator()
         self.repo = repository
         self.number_of_commits = number_of_commits
