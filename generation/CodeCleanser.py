@@ -2,17 +2,20 @@ import os
 import re
 import uuid
 
+from generation.Compilable import Compilable
 from generation.ImportResolver import ImportResolver
 from history_scanner.Prompt import Prompt
 from util.subprocess_utils import try_run
 
 
 class CodeCleanser:
-    def __init__(self, repo_dir: str, environment_command: str, import_resolver: ImportResolver):
+    def __init__(self, repo_dir: str, environment_command: str, import_resolver: ImportResolver,
+                 make_compilable: Compilable):
         self.repo_dir = repo_dir
         self.environment_command = environment_command
         self.import_crawler = import_resolver
         self.name_error_re = re.compile(r"NameError:\sname '(\w+)' is not defined")
+        self.compilable = make_compilable
 
     def cleanse_test(self, test_code: str, prompt: Prompt):
         max_depth = 5
@@ -31,6 +34,9 @@ class CodeCleanser:
 
         with open(file_path, 'r') as f:
             source = '\n'.join(f.readlines())
+
+        if try_run(f"python {file_path}", cwd=self.repo_dir, return_exit_code=True) != 0:
+            source = self.compilable.fix_test(source)
 
         os.remove(file_path)
 
