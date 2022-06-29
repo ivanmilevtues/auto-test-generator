@@ -9,7 +9,7 @@ from util.subprocess_utils import try_run
 class RuntimeEvaluator:
     def __init__(self, repository, setup_command):
         self.repository = repository
-        self.setup_command = setup_command
+        self.setup_command = f'{setup_command} &'if setup_command != '' else ''
         self.df = pd.DataFrame(
             {
                 "Filename": [],
@@ -25,9 +25,9 @@ class RuntimeEvaluator:
         self.error_re = re.compile(r'=.+((?P<number>\d+) error)')
 
     def evaluate(self, file):
-        self.run_subprocess(f'{self.setup_command}')
-        compile_result = self.run_subprocess(f'python {file}')
-        test_result = self.run_subprocess(f'{self.setup_command} & pytest {file}')
+        self.run_subprocess(f'{self.setup_command}', False)
+        compile_result = self.run_subprocess(f'python {file}', True)
+        test_result = self.run_subprocess(f'{self.setup_command} pytest {file}', False)
         fails, passes, warnings, errors = self.parse_result(test_result)
         print("Runtime eval:", compile_result, fails, passes, warnings, errors)
         self.df = self.df.append(
@@ -45,16 +45,16 @@ class RuntimeEvaluator:
         return self.__get_number(self.failed_re, out), self.__get_number(self.passed_re, out), \
                self.__get_number(self.warning_re, out), self.__get_number(self.error_re, out)
 
-    def run_subprocess(self, command):
+    def run_subprocess(self, command, return_exit_code):
         try:
-            return try_run(command, cwd=self.repository, throw=True)
+            return try_run(command, cwd=self.repository, throw=True, return_exit_code=return_exit_code)
         except subprocess.CalledProcessError as e:
             print("Failed to run command: ", e)
         except Exception as e:
             print("Generic exception while runtime evaluation: ", e)
         if '&' in command:
             print("Retrying evaluation")
-            return self.run_subprocess(command.split('&')[-1].strip())
+            return self.run_subprocess(command.split('&')[-1].strip(), return_exit_code)
         return 0
 
     def export(self, filename="compiler_evaluation.csv"):

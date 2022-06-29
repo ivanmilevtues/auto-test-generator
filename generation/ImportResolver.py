@@ -7,10 +7,11 @@ class ImportResolver:
 
     def find_imports(self, error_names: set):
         import_lines = []
+        lines = []
         for file in self.files:
             with open(file, 'r') as f:
-                content = f.readlines()
-            for line in content:
+                lines = f.readlines()
+            for line in lines:
                 found_strings = []
                 for name in error_names:
                     if 'import' in line and name in line:
@@ -20,7 +21,7 @@ class ImportResolver:
 
                 if len(error_names) == 0:
                     return import_lines
-        return import_lines
+        return import_lines + lines, len(import_lines) > 0
 
     @staticmethod
     def __get_all_python_files(base_dir):

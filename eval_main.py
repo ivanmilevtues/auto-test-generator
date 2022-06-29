@@ -11,15 +11,15 @@ from eval.BLEUEvaluator import BLEUEvaluator
 
 
 def main():
-    path = Path("dataset_repos/httpie")
-    setup_command = "python -m venv --prompt httpie venv " + \
-                    "& venv\\Scripts\\activate " + \
-                    "& python -m pip install --upgrade -e .[dev]"
+    path = Path("dataset_repos/calculator")
+    setup_command = ""
     bleu = BLEUEvaluator()
     compiler = RuntimeEvaluator(path, setup_command)
     parser = GitHistoryDataSetParser(str(path.absolute()), branch="master")
+    data = parser.get_parsed_data()
+    parser.save_parsed_data("dataset_repos/data/calc_reference_commits.dat")
+    # data = parser.load_data("dataset_repos/data/httpie_reference_commits.dat")
 
-    data = parser.load_data("dataset_repos/data/httpie_reference_commits.dat")
     print(f"Generating tests for {len(data)} commits")
 
     generator = Generator(CodeCleanser(str(path.absolute()), setup_command, ImportResolver(str(path))))
@@ -37,8 +37,8 @@ def main():
                 print(f"Tests for {prompt} not saved", e)
         saver.commit_files()
         saver.clean_state()
-    bleu.export('blue_httpie_imports.csv')
-    compiler.export('compile_httpie_imports.csv')
+    bleu.export('blue_calculator_imports.csv')
+    compiler.export('compile_calculator_imports.csv')
 
 
 def save_and_eval(tests, saver, bleu, compiler, commit):
