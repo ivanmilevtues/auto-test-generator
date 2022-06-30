@@ -28,14 +28,14 @@ def main():
     for commit in data:
         saver = GeneratedTestSaver(str(path.absolute()),
                                    commit.commit_id, main_branch="master",
-                                   directory_for_generation="gen_tests_model_edit")
+                                   directory_for_generation="gen_tests_model_last")
         saver.goto_commit()
         for prompt in commit.construct_prompt():
-            # try:
-            tests = generator.generate(prompt)
-            save_and_eval(tests, saver, bleu, compiler, commit)
-            # except Exception as e:
-            #     print(f"Tests for {prompt} not saved", e)
+            try:
+                tests = generator.generate(prompt)
+                save_and_eval(tests, saver, bleu, compiler, commit)
+            except Exception as e:
+                print(f"Tests for {prompt} not saved", e)
         saver.commit_files()
         saver.clean_state()
     bleu.export('blue_calculator_compile_model.csv')

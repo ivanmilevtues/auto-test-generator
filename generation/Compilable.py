@@ -6,7 +6,8 @@ class Compilable:
     def __init__(self):
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    def fix_test(self, code):
+    @staticmethod
+    def fix_test(code):
         try:
             response = openai.Edit.create(
                 model="code-davinci-edit-001",
