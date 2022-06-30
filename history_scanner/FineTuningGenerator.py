@@ -10,9 +10,6 @@ class FineTuningGenerator:
         self.prompts = None
         self.commits = commits
 
-    def generate_model(self):
-        pass
-
     def save(self, filename: str):
         if self.prompts is None:
             raise Exception("Prompt is not generated. Please run generate_prompt_lines before calling the save method.")
