@@ -11,4 +11,4 @@ class Generator:
     def generate(self, prompt: Prompt):
         for prompt_str in prompt.to_prompts():
             test_code = self.model.generate_test(prompt_str)
-            yield self.cleanser.cleanse_test(test_code, prompt)
+            yield self.cleanser.cleanse_test(test_code)

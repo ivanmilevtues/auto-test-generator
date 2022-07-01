@@ -4,6 +4,8 @@ import re
 import ast
 import time
 
+from util.decorators import time_measuring_decorator
+
 
 class Model:
     def __init__(self):
@@ -11,6 +13,7 @@ class Model:
         self.original_prompt = None
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
+    @time_measuring_decorator
     def generate_test(self, prompt):
         self.original_prompt = prompt
         completion = self.complete(self.original_prompt)
