@@ -32,17 +32,17 @@ import os
 
 
 if __name__ == "__main__":
-    branch_name = os.getenv('GITHUB_HEAD_REF')
+    branch_name = 'action-configuration' #os.getenv('GITHUB_HEAD_REF')
     print(branch_name)
     print(os.getenv('OPENAI_API_KEY'))
     from pydriller import Repository
 
-    repo = Repository('./', only_in_branch=branch_name,
+    repo = Repository('./',
                       only_modifications_with_file_types=[".py"],
                       include_deleted_files=False,
                       order='reverse')
     for commit in repo.traverse_commits():
-        print(commit.msg)
+        print(commit.hash, commit.msg, commit.in_main_branch)
     # with open('test_code.py', 'w') as f:
     #     f.write('print("this is test")')
     # generate_test(branch_name)
