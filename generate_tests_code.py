@@ -34,19 +34,13 @@ import subprocess
 
 if __name__ == "__main__":
     branch_name = 'origin/actions-configuration' #os.getenv('GITHUB_HEAD_REF')
-    print(branch_name)
-    print(os.getenv('OPENAI_API_KEY'))
     from pydriller import Repository
 
-    repo = Repository('./',
+    repo = Repository('https://github.com/ivanmilevtues/auto-test-generator',
                       only_in_branch=branch_name,
                       only_modifications_with_file_types=[".py"],
                       include_deleted_files=False,
                       order='reverse')
-    print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
-    res = subprocess.run(f'git checkout {branch_name} & git log', stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    print(res.stdout.decode())
-    print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
     try:
         for commit in repo.traverse_commits():
             print(commit.hash, commit.msg, commit.in_main_branch)
