@@ -33,10 +33,11 @@ from git import GitCommandError
 import subprocess
 
 if __name__ == "__main__":
-    branch_name = 'origin/actions-configuration' #os.getenv('GITHUB_HEAD_REF')
+    branch_name = f'origin/{os.getenv("GITHUB_HEAD_REF")}'
+    repo_url = os.getenv('REPO_URL')
     from pydriller import Repository
 
-    repo = Repository('https://github.com/ivanmilevtues/auto-test-generator',
+    repo = Repository(repo_url,
                       only_in_branch=branch_name,
                       only_modifications_with_file_types=[".py"],
                       include_deleted_files=False,

@@ -5,6 +5,7 @@ on:
     types: [opened, reopened]
 env:
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  REPO_URL: ${{ github.repositoryUrl }}
 jobs:
   generate:
     name: Changelog Generator
