@@ -10,10 +10,10 @@ from generation.ImportResolver import ImportResolver
 from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 
 
-def generate_test(branch, url):
+def generate_test(branch):
     path = Path('./')
     setup_command = ''
-    parser = GitHistoryDataSetParser(url, branch=f'{branch}', only_last_commit=True)
+    parser = GitHistoryDataSetParser(str(path.absolute()), branch=f'{branch}', only_last_commit=True)
     data = parser.get_parsed_data()
 
     generator = Generator(CodeCleanser(str(path.absolute()), setup_command, ImportResolver(str(path)), Compilable()))
@@ -38,7 +38,5 @@ def reconstruct_url(git_url):
 
 
 if __name__ == "__main__":
-    print("STARTING THE GENERATE TESTS CODE")
-    branch_name = f'origin/{os.getenv("GITHUB_HEAD_REF")}'
-    repo_url = reconstruct_url(os.getenv('REPO_URL'))
-    generate_test(branch_name, repo_url)
+    branch_name = os.getenv("GITHUB_HEAD_REF")
+    generate_test(branch_name)
