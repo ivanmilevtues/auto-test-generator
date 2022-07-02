@@ -29,7 +29,7 @@ import os
 #                     saver.save_test_file(test, f'{uuid.uuid4()}')
 #             except Exception as e:
 #                 print(f"Tests for {prompt} not saved", e)
-
+from git import GitCommandError
 
 if __name__ == "__main__":
     branch_name = 'action-configuration' #os.getenv('GITHUB_HEAD_REF')
@@ -41,8 +41,16 @@ if __name__ == "__main__":
                       only_modifications_with_file_types=[".py"],
                       include_deleted_files=False,
                       order='reverse')
-    for commit in repo.traverse_commits():
-        print(commit.hash, commit.msg, commit.in_main_branch)
+    try:
+        for commit in repo.traverse_commits():
+            print(commit.hash, commit.msg, commit.in_main_branch)
+    except GitCommandError as e:
+        print('Command', e.command)
+        print('Stdout', e.stdout)
+        print('Stderr', e.stderr)
+        print('Status', e.status)
+        print('Args', e.args)
+
     # with open('test_code.py', 'w') as f:
     #     f.write('print("this is test")')
     # generate_test(branch_name)
