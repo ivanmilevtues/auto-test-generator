@@ -53,7 +53,7 @@ if __name__ == "__main__":
         print('Status', e.status)
         print('Args', e.args)
         res = subprocess.run(' '.join(e.command), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-        print(res.stdout.decode())
+        print('RESULT: ', res.stdout.decode())
 
     # with open('test_code.py', 'w') as f:
     #     f.write('print("this is test")')
