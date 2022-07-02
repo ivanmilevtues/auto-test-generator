@@ -15,19 +15,18 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
-      #      - uses: actions/cache@v2
-#        with:
-#          path: ~/conda_pkgs_dir
-#          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('environment.yml') }}
-#      - uses: conda-incubator/setup-miniconda@v2
-#        with:
-#          activate-environment: diploma
-#          environment-file: environment.yml
-#          python-version: 3.9
-#          auto-activate-base: false
-#          use-only-tar-bz2: true
-#      - run: python -m nltk.downloader punkt stopwords
-      - run: pip install PyDriller
+      - uses: actions/cache@v2
+        with:
+          path: ~/conda_pkgs_dir
+          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('environment.yml') }}
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: diploma
+          environment-file: environment.yml
+          python-version: 3.9
+          auto-activate-base: false
+          use-only-tar-bz2: true
+      - run: python -m nltk.downloader punkt stopwords
       - run: python generate_tests_code.py
-#      - name: Create Pull Request
-#        uses: peter-evans/create-pull-request@v4
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
