@@ -7,11 +7,14 @@ on:
 jobs:
   generate:
     name: Changelog Generator
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           fetch-depth: 0
+          python-version: '3.9'
+      - run: python generate_tests_code.py
       - name: Create Changelog
         uses: ./
       - name: Upload artifacts
@@ -19,22 +22,3 @@ jobs:
         with:
           name: changelog
           path: /home/runner/work/_temp/_github_home/CHANGELOG.md
-  upload:
-    name: Upload Changelog to PR
-    runs-on: ubuntu-latest
-    needs: generate
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: Download results from the generate job
-        uses: actions/download-artifact@v3.0.0
-        with:
-          name: changelog
-      - name: Add artifacts to repo
-        run: |
-          git config --global user.name "ivanmilevtues"
-          git config -- gloabl user.email "ivanmilevtues@gmail.com"
-          git add --all
-          git commit -m "docs: generated changelog for PR"
-          git push
