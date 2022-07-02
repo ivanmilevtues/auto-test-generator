@@ -13,17 +13,4 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
-      - uses: actions/cache@v2
-        with:
-          path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{hashFiles('environment.yml') }}
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: diploma
-          environment-file: environment.yml
-          python-version: 3.9
-          auto-activate-base: false
-          use-only-tar-bz2: true
-      - run: python generate_tests_code.py
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+      - run: git diff-tree 342d87403b171dd19e5c74b2486a5b64a40e8584 e8f93fa4bbe7e14c51ee5d5498f443a3871c0927 -r --abbrev=40 --full-index -M -p --no-color
