@@ -13,4 +13,6 @@ jobs:
         with:
           python-version: '3.9'
       - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pip install -r pip_requirements.txt
       - run: python generate_tests_code.py
