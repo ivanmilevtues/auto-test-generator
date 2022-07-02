@@ -36,10 +36,11 @@ if __name__ == "__main__":
     branch_name = f'origin/{os.getenv("GITHUB_HEAD_REF")}'
     repo_url = os.getenv('REPO_URL')
     parts = repo_url.split('\\')
+    print('Parts', parts)
     parts[0] = 'https:/'
-    parts[-1] = parts[-1][:-4] # remvoe .git
+    parts[-1] = parts[-1][:-4]  # remove .git
     repo_url = '/'.join(parts)
-    print(repo_url)
+    print('RepoURL', repo_url)
     from pydriller import Repository
 
     repo = Repository(repo_url,
