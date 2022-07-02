@@ -35,6 +35,11 @@ import subprocess
 if __name__ == "__main__":
     branch_name = f'origin/{os.getenv("GITHUB_HEAD_REF")}'
     repo_url = os.getenv('REPO_URL')
+    parts = repo_url.split('\\')
+    parts[0] = 'https:/'
+    parts[-1] = parts[-1][:-4] # remvoe .git
+    repo_url = '/'.join(parts)
+    print(repo_url)
     from pydriller import Repository
 
     repo = Repository(repo_url,
