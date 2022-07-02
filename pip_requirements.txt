@@ -18,6 +18,7 @@ debugpy @ file:///C:/ci/debugpy_1637091961445/work
 decorator==4.4.2
 defusedxml @ file:///tmp/build/80754af9/defusedxml_1615228127516/work
 docker-pycreds==0.4.0
+docopt==0.6.2
 entrypoints @ file:///C:/ci/entrypoints_1649926621128/work
 et-xmlfile==1.0.1
 executing @ file:///opt/conda/conda-bld/executing_1646925071911/work
@@ -131,3 +132,4 @@ win-inet-pton @ file:///D:/bld/win_inet_pton_1635832858406/work
 win32-setctime==1.1.0
 wincertstore==0.2
 windb==0.0.2
+yarg==0.1.9

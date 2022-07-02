@@ -1,47 +1,35 @@
-import re
-import shlex
-import subprocess
+import uuid
+from pathlib import Path
+import os
+
+from generation.CodeCleanser import CodeCleanser
+from generation.Compilable import Compilable
+from generation.GeneratedTestSaver import GeneratedTestSaver
+from generation.Generator import Generator
+from generation.ImportResolver import ImportResolver
+from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 
 
-def get_commit_log():
-    output = subprocess.check_output(shlex.split('git log --pretty=%s --color'),
-                                     stderr=subprocess.STDOUT)
-    output = output.decode('ascii')
-    output = output.split('\n')
-    return output
+def generate_test(branch):
+    path = Path('./')
+    setup_command = ''
+    parser = GitHistoryDataSetParser(str(path.absolute()), branch=f'{branch}', only_last_commit=True)
+    data = parser.get_parsed_data()
 
+    generator = Generator(CodeCleanser(str(path.absolute()), setup_command, ImportResolver(str(path)), Compilable()))
 
-def strip_commits(commits):
-    output = []
-    for line in commits:
-        if re.findall(r"(feat|fix|refactor|test|cli)", line):
-            output.append(line)
-    return output
-
-
-def overwrite_changelog(commits):
-    print("Going to write the following commits: \n{}".format(commits))
-    with open("./CHANGELOG.md", "w+") as f:
-        f.write("# CHANGELOG \n\n ## Features:\n\n")
-        for feat in commits:
-            if re.findall(r"^feat", feat):
-                f.write("* {}\n".format(feat))
-        f.write("\n## Bugs:\n\n")
-        for fix in commits:
-            if re.findall(r"^fix", fix):
-                f.write("* {}\n".format(fix))
-        f.write("\n## Others:")
-        for other in commits:
-            if re.findall(r"^(refactor|test|cli)", other):
-                f.write("* {}\n".format(other))
-        f.write("\n\n\n> Generated with Github actions")
-
-
-def main():
-    commits = get_commit_log()
-    commits = strip_commits(commits)
-    overwrite_changelog(commits)
+    for commit in data:
+        saver = GeneratedTestSaver(str(path.absolute()), commit.commit_id, main_branch='master',
+                                   directory_for_generation=f'generated_tests_for_{commit.commit_id}')
+        for prompt in commit.construct_prompt():
+            try:
+                tests = generator.generate(prompt)
+                for test in tests:
+                    saver.save_test_file(test, f'{uuid.uuid4()}')
+            except Exception as e:
+                print(f"Tests for {prompt} not saved", e)
 
 
 if __name__ == "__main__":
-    print("Hello World")
+    branch_name = os.getenv("GITHUB_HEAD_REF")
+    generate_test(branch_name)
