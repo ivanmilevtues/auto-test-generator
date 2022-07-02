@@ -15,10 +15,3 @@ jobs:
           fetch-depth: 0
           python-version: '3.9'
       - run: python ../generate_tests_code.py
-      - name: Create Changelog
-        uses: ./
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: changelog
-          path: /home/runner/work/_temp/_github_home/CHANGELOG.md
