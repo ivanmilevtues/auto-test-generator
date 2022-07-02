@@ -30,6 +30,7 @@ import os
 #             except Exception as e:
 #                 print(f"Tests for {prompt} not saved", e)
 from git import GitCommandError
+import subprocess
 
 if __name__ == "__main__":
     branch_name = 'action-configuration' #os.getenv('GITHUB_HEAD_REF')
@@ -38,6 +39,7 @@ if __name__ == "__main__":
     from pydriller import Repository
 
     repo = Repository('./',
+                      only_in_branch=branch_name,
                       only_modifications_with_file_types=[".py"],
                       include_deleted_files=False,
                       order='reverse')
@@ -50,6 +52,8 @@ if __name__ == "__main__":
         print('Stderr', e.stderr)
         print('Status', e.status)
         print('Args', e.args)
+        res = subprocess.run(' '.join(e.command), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        print(res.stdout.decode())
 
     # with open('test_code.py', 'w') as f:
     #     f.write('print("this is test")')
