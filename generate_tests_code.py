@@ -43,6 +43,10 @@ if __name__ == "__main__":
                       only_modifications_with_file_types=[".py"],
                       include_deleted_files=False,
                       order='reverse')
+    print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
+    res = subprocess.run(f'git checkout {branch_name} & git log', stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    print(res.stdout.decode())
+    print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
     try:
         for commit in repo.traverse_commits():
             print(commit.hash, commit.msg, commit.in_main_branch)
