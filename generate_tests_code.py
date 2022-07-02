@@ -13,7 +13,7 @@ from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 def generate_test(branch, url):
     path = Path('./')
     setup_command = ''
-    parser = GitHistoryDataSetParser(url, branch=f'origin/{branch}', only_last_commit=True)
+    parser = GitHistoryDataSetParser(url, branch=f'{branch}', only_last_commit=True)
     data = parser.get_parsed_data()
 
     generator = Generator(CodeCleanser(str(path.absolute()), setup_command, ImportResolver(str(path)), Compilable()))
