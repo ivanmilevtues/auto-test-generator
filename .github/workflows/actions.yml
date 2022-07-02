@@ -8,9 +8,6 @@ jobs:
     name: Changelog Generator
     runs-on: windows-latest
     steps:
-      - name: "Getting open ai api key"
-        env:
-          OPENAI_API_KEY: ${{ OPENAI_API_KEY }}
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
@@ -26,6 +23,9 @@ jobs:
 #          python-version: 3.9
 #          auto-activate-base: false
 #          use-only-tar-bz2: true
-      - run: python generate_tests_code.py
+      - name: Generating source code
+        env:
+          OPENAI_API_KEY: ${{ OPENAI_API_KEY }}
+        run: python generate_tests_code.py
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
