@@ -1,5 +1,4 @@
 import uuid
-import nltk
 from pathlib import Path
 import os
 
@@ -12,7 +11,6 @@ from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 
 
 def generate_test(branch, url):
-    nltk.download('punkt')
     path = Path('./')
     setup_command = ''
     parser = GitHistoryDataSetParser(url, branch=f'{branch}', only_last_commit=True)
