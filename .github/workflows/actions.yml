@@ -8,6 +8,9 @@ jobs:
     name: Changelog Generator
     runs-on: windows-latest
     steps:
+      - name: "Getting open ai api key"
+        env:
+          OPENAI_API_KEY: ${{ OPENAI_API_KEY }}
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
