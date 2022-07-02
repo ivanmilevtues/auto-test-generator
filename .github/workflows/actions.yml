@@ -14,4 +14,4 @@ jobs:
           fetch-depth: 0
           python-version: '3.9'
       - uses: actions/checkout@v3
-      - run: dir
+      - run: python changelog_generator.py
