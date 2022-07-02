@@ -25,6 +25,7 @@ jobs:
           python-version: 3.9
           auto-activate-base: false
           use-only-tar-bz2: true
+      - run: python -m nltk.downloader punkt stopwords
       - run: python generate_tests_code.py
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
