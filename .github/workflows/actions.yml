@@ -25,4 +25,6 @@ jobs:
 #          auto-activate-base: false
 #          use-only-tar-bz2: true
       - run: pip install PyDriller
+      - run: git status
       - run: python generate_tests_code.py
+      - run: git status
