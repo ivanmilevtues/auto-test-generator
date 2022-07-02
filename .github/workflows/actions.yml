@@ -23,7 +23,7 @@ jobs:
 #          python-version: 3.9
 #          auto-activate-base: false
 #          use-only-tar-bz2: true
-      - name: Generating source code
+      - shell: pwsh
         env:
           OPENAI_API_KEY: ${{ OPENAI_API_KEY }}
         run: python generate_tests_code.py
