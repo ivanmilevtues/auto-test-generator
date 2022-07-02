@@ -9,21 +9,33 @@ from history_scanner.commit_file import CommitFile
 
 
 class GitHistoryDataSetParser:
-    def __init__(self, repository_path="./", branch="main"):
+    def __init__(self, repository_path="./", branch="main", only_last_commit=False):
         self.commit_msg_tokens = []
-        self.git_repo = Repository(repository_path, only_in_branch=branch, only_modifications_with_file_types=[".py"],
-                                   include_deleted_files=False)
         self.parsed_data = []
         self.stemmer = SnowballStemmer(language='english')
+        self.only_last_commit = only_last_commit
+        if only_last_commit:
+            self.git_repo = Repository(repository_path, only_in_branch=branch,
+                                       only_modifications_with_file_types=[".py"],
+                                       include_deleted_files=False,
+                                       order='reverse')
+        else:
+            self.git_repo = Repository(repository_path, only_in_branch=branch,
+                                       only_modifications_with_file_types=[".py"],
+                                       include_deleted_files=False)
 
     def parse_data(self):
-        self.parsed_data = list(filter(None, [self.process_commit(commit)
-                                              for commit in self.git_repo.traverse_commits()]))
+        if self.only_last_commit:
+            commits = [next(self.git_repo.traverse_commits())]
+            self.parsed_data = list(filter(None, [self.process_commit(commit)
+                                                  for commit in commits]))
+        else:
+            self.parsed_data = list(filter(None, [self.process_commit(commit)
+                                                  for commit in self.git_repo.traverse_commits()]))
 
     def get_parsed_data(self):
         if not self.parsed_data:
-            self.parsed_data = list(filter(None, [self.process_commit(commit)
-                                                  for commit in self.git_repo.traverse_commits()]))
+            self.parse_data()
         return self.parsed_data
 
     def process_commit(self, commit) -> CommitData:
