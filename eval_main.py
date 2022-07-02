@@ -14,14 +14,14 @@ from util.decorators import time_measuring_decorator
 
 @time_measuring_decorator
 def main():
-    path = Path("dataset_repos/calculator")
-    setup_command = "conda activate diploma"
+    path = Path("dataset_repos/pydriller")
+    setup_command = "pip install -r requirements.txt & pip install -r test-requirements.txt & tar -xf test-repos.zip"
     bleu = BLEUEvaluator()
     compiler = RuntimeEvaluator(path, setup_command)
     parser = GitHistoryDataSetParser(str(path.absolute()), branch="master")
     # data = parser.get_parsed_data()
     # parser.save_parsed_data("dataset_repos/data/calc_reference_commits.dat")
-    data = parser.load_data("dataset_repos/data/calc_reference_commits.dat")
+    data = parser.load_data("dataset_repos/data/pydriller_reference_commits.dat")
 
     print(f"Generating tests for {len(data)} commits")
 
@@ -40,8 +40,8 @@ def main():
             #     print(f"Tests for {prompt} not saved", e)
         saver.commit_files()
         saver.clean_state()
-    bleu.export('blue_calculator_import_fixes.csv')
-    compiler.export('compile_calculator_import_fixes.csv')
+    bleu.export('blue_pydriller_import_fixes.csv')
+    compiler.export('compile_pydriller_import_fixes.csv')
 
 
 def save_and_eval(tests, saver, bleu, compiler, commit):
