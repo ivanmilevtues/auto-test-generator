@@ -44,7 +44,7 @@ class GitHistoryDataSetParser:
         self.commit_msg_tokens = [self.stemmer.stem(w) for w in commit_msg_tokens]
 
         py_files, test_files = self.__get_edited_files_source(commit)
-        if len(py_files) > 0 and len(test_files) > 0:
+        if len(py_files) > 0 and (self.only_last_commit or len(test_files) > 0):
             commit_data = CommitData(commit.hash, commit.msg, py_files, test_files)
             print(commit_data)
             return commit_data
