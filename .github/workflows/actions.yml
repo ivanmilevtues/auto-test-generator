@@ -13,4 +13,4 @@ jobs:
         with:
           python-version: '3.9'
       - uses: actions/checkout@v3
-      - run: python changelog_generator.py
+      - run: python generate_test_code.py
