@@ -39,6 +39,7 @@ class GitHistoryDataSetParser:
         return self.parsed_data
 
     def process_commit(self, commit) -> CommitData:
+        print("Processing commit", commit.msg)
         commit_msg_tokens = word_tokenize(commit.msg)
         self.commit_msg_tokens = [self.stemmer.stem(w) for w in commit_msg_tokens]
 

@@ -38,6 +38,7 @@ def reconstruct_url(git_url):
 
 
 if __name__ == "__main__":
+    print("STARTING THE GENERATE TESTS CODE")
     branch_name = f'origin/{os.getenv("GITHUB_HEAD_REF")}'
     repo_url = reconstruct_url(os.getenv('REPO_URL'))
     generate_test(branch_name, repo_url)
