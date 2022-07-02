@@ -16,4 +16,6 @@ jobs:
           environment-file: environment.yml
           python-version: 3.9
           auto-activate-base: false
-      - run: python generate_tests_code.py
+      - run: |
+          conda info
+          conda list
