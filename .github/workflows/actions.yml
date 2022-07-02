@@ -10,12 +10,16 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: ~/conda_pkgs_dir
+          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('environment.yml') }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: diploma
           environment-file: environment.yml
           python-version: 3.9
           auto-activate-base: false
-      - run: |
-          conda info
-          conda list
+          use-only-tar-bz2: true
+      - run: python generate_tests_code.py
