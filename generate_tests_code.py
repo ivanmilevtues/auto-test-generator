@@ -33,6 +33,6 @@ import os
 if __name__ == "__main__":
     branch_name = os.getenv('GITHUB_HEAD_REF')
     print(branch_name)
-    with open('test_code.py') as f:
+    with open('test_code.py', 'w') as f:
         f.write('print("this is test")')
     # generate_test(branch_name)
