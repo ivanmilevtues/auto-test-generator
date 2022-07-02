@@ -33,7 +33,7 @@ from git import GitCommandError
 import subprocess
 
 if __name__ == "__main__":
-    branch_name = 'actions-configuration' #os.getenv('GITHUB_HEAD_REF')
+    branch_name = 'origin/actions-configuration' #os.getenv('GITHUB_HEAD_REF')
     print(branch_name)
     print(os.getenv('OPENAI_API_KEY'))
     from pydriller import Repository
