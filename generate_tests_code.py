@@ -14,7 +14,7 @@ import os
 def generate_test(branch):
     path = Path('./')
     setup_command = ''
-    parser = GitHistoryDataSetParser('https://github.com/ivanmilevtues/auto-test-generator', branch=branch, only_last_commit=True)
+    parser = GitHistoryDataSetParser('./', branch=f'origin/{branch}', only_last_commit=True)
     data = parser.get_parsed_data()
 
     generator = Generator(CodeCleanser(str(path.absolute()), setup_command, ImportResolver(str(path)), Compilable()))
