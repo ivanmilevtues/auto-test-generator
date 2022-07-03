@@ -1,4 +1,3 @@
-from operator import eq
 
 
 def convert_to_prefix(equation):
@@ -18,5 +17,6 @@ def convert_to_prefix(equation):
         postfix += ' '+ stack.pop()
     return postfix.split(' ')[1:]
 
+
 def is_operand(ch):
-    return ch in ['+', '-', '/', '*', '^']
+    return ch in ['+', '-', '/', '*', '^', "%"]
