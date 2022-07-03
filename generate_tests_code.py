@@ -11,7 +11,7 @@ from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 
 
 def generate_test(branch):
-    path = Path('./')
+    path = Path('./datasets/Calculator')
     setup_command = ''
     parser = GitHistoryDataSetParser(str(path.absolute()), branch=f'{branch}', only_last_commit=True)
     data = parser.get_parsed_data()
@@ -31,5 +31,5 @@ def generate_test(branch):
 
 
 if __name__ == "__main__":
-    branch_name = os.getenv("GITHUB_HEAD_REF")
+    branch_name = 'main' #os.getenv("GITHUB_HEAD_REF")
     generate_test(branch_name)
