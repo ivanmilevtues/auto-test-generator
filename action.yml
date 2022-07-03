@@ -1,9 +1,6 @@
-name: "Auto-generation action"
+name: "Automatic tests generation from commits messages for Python."
 author: "Ivan Milev"
-description: "Generates test cases"
-outputs:
-  changelog:
-    description: "Changelog.md file has been added to the Pull-request"
+description: "AI powered action which will generate automatically functional and integration tests."
 runs:
   using: 'docker'
   image: 'Dockerfile'

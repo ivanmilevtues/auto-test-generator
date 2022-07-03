@@ -132,3 +132,4 @@ dmypy.json
 datasets/*.json
 
 dataset_repos/
+!dataset_repos/calculator/
