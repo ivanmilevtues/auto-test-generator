@@ -32,5 +32,5 @@ def generate_test(branch):
 
 
 if __name__ == "__main__":
-    branch_name = 'main'  # os.getenv("GITHUB_HEAD_REF")
+    branch_name = os.getenv("GITHUB_HEAD_REF")
     generate_test(branch_name)
