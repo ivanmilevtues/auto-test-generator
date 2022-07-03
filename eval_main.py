@@ -14,14 +14,14 @@ from util.decorators import time_measuring_decorator
 
 @time_measuring_decorator
 def main():
-    path = Path("dataset_repos/pydriller")
-    setup_command = "pip install -r requirements.txt & pip install -r test-requirements.txt & tar -xf test-repos.zip"
+    path = Path("dataset_repos/fake-calculator")
+    setup_command = "conda activate diploma"
     bleu = BLEUEvaluator()
     compiler = RuntimeEvaluator(path, setup_command)
-    parser = GitHistoryDataSetParser(str(path.absolute()), branch="master")
-    # data = parser.get_parsed_data()
+    parser = GitHistoryDataSetParser(str(path.absolute()), branch="main")
+    data = parser.get_parsed_data()
     # parser.save_parsed_data("dataset_repos/data/calc_reference_commits.dat")
-    data = parser.load_data("dataset_repos/data/pydriller_reference_commits.dat")
+    # data = parser.load_data("dataset_repos/data/calc_reference_commits.dat")
 
     print(f"Generating tests for {len(data)} commits")
 
@@ -29,13 +29,14 @@ def main():
 
     for commit in data:
         saver = GeneratedTestSaver(str(path.absolute()),
-                                   commit.commit_id, main_branch="master",
-                                   directory_for_generation="get_tests_imports_fixes")
+                                   commit.commit_id, main_branch="main",
+                                   directory_for_generation="gen_tests_evaluation")
         saver.goto_commit()
         for prompt in commit.construct_prompt():
             try:
                 tests = generator.generate(prompt)
                 save_and_eval(tests, saver, bleu, compiler, commit)
+                compiler.evaluate_set("gen_tests_evaluation", commit.commit_id)
             except Exception as e:
                 print(f"Tests for {prompt} not saved", e)
         saver.commit_files()
