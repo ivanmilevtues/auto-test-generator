@@ -14,14 +14,15 @@ from util.decorators import time_measuring_decorator
 
 @time_measuring_decorator
 def main():
-    path = Path("dataset_repos/fake-calculator")
-    setup_command = "conda activate diploma"
+    path = Path("dataset_repos/httpie")
+    setup_command = "python -m venv --prompt httpie venv " + \
+                    "& venv\\Scripts\\activate " + \
+                    "& python -m pip install --upgrade -e .[dev]"
     bleu = BLEUEvaluator()
     compiler = RuntimeEvaluator(path, setup_command)
-    parser = GitHistoryDataSetParser(str(path.absolute()), branch="main")
-    data = parser.get_parsed_data()
+    parser = GitHistoryDataSetParser(str(path.absolute()), branch="master")
     # parser.save_parsed_data("dataset_repos/data/calc_reference_commits.dat")
-    # data = parser.load_data("dataset_repos/data/calc_reference_commits.dat")
+    data = parser.load_data("dataset_repos/data/httpie_reference_commits.dat")
 
     print(f"Generating tests for {len(data)} commits")
 
@@ -29,7 +30,7 @@ def main():
 
     for commit in data:
         saver = GeneratedTestSaver(str(path.absolute()),
-                                   commit.commit_id, main_branch="main",
+                                   commit.commit_id, main_branch="master",
                                    directory_for_generation="gen_tests_evaluation")
         saver.goto_commit()
         for prompt in commit.construct_prompt():
@@ -41,8 +42,8 @@ def main():
                 print(f"Tests for {prompt} not saved", e)
         saver.commit_files()
         saver.clean_state()
-    bleu.export('blue_pydriller_import_fixes.csv')
-    compiler.export('compile_pydriller_import_fixes.csv')
+    bleu.export('blue_httpie_import_fixes.csv')
+    compiler.export('compile_httpie_import_fixes.csv')
 
 
 def save_and_eval(tests, saver, bleu, compiler, commit):
