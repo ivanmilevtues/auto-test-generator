@@ -8,11 +8,11 @@ class ImportResolver:
     def find_imports(self, error_names: set):
         print('error names', error_names)
         import_lines = []
-        lines = []
         files = self.__get_all_python_files()
+        print(files)
         for file in files:
             try:
-                with open(file, 'r') as f:
+                with open(file, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
                 for line in lines:
                     found_strings = []

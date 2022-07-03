@@ -11,12 +11,13 @@ from history_scanner.GitHistoryDataSetParser import GitHistoryDataSetParser
 
 
 def generate_test(branch):
-    path = Path('./datasets/Calculator')
+    path = Path('./')
     setup_command = ''
     parser = GitHistoryDataSetParser(str(path.absolute()), branch=f'{branch}', only_last_commit=True)
     data = parser.get_parsed_data()
 
-    generator = Generator(CodeCleanser(str(path.absolute()), setup_command, ImportResolver(str(path)), Compilable()))
+    generator = Generator(
+        CodeCleanser(str(path.absolute()), setup_command, ImportResolver('./datasets/Calculator'), Compilable()))
 
     for commit in data:
         saver = GeneratedTestSaver(str(path.absolute()), commit.commit_id, main_branch='master',
@@ -31,5 +32,5 @@ def generate_test(branch):
 
 
 if __name__ == "__main__":
-    branch_name = 'main' #os.getenv("GITHUB_HEAD_REF")
+    branch_name = 'main'  # os.getenv("GITHUB_HEAD_REF")
     generate_test(branch_name)

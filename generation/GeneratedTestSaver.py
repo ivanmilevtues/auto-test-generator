@@ -11,6 +11,7 @@ class GeneratedTestSaver:
         self.commit_id = commit_id
         self.generated_code_directory = directory_for_generation
         self.main_branch = main_branch
+        self.init_module()
 
     def init_module(self):
         init_module = f"{self.repository_path}/{self.generated_code_directory}/__init__.py"
@@ -29,7 +30,6 @@ class GeneratedTestSaver:
         subprocess.run(["git", "checkout", "-b", f"{self.generated_code_directory}_{GeneratedTestSaver.BRANCH_ID}",
                         self.commit_id],
                        check=True, stdout=subprocess.PIPE, cwd=self.repository_path)
-        self.init_module()
 
     def commit_files(self):
         subprocess.run(["git", "add", f"{self.generated_code_directory}/*"],
