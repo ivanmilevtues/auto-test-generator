@@ -131,5 +131,7 @@ dmypy.json
 # Do not track datasets
 datasets/*.json
 
-dataset_repos/*
-!dataset_repos/calculator/
+dataset_repos/flask
+dataset_repos/pydriller
+dataset_repos/httpie
+dataset_repos/data
