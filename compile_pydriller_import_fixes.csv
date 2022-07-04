@@ -1,0 +1,17 @@
+,Filename,Python compilation,Pytest fails,Pytest passes,Pytest warnings,Pytest errors
+0,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_a585ded6-7a08-47c7-8e56-f53bc99bb94d.py,1,0,0,0,1
+1,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_f3506955-a8e9-4601-9968-0a103e8ac476.py,1,0,0,0,1
+2,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_79b787ff-cb96-499c-927f-82dc5180ad9b.py,1,0,0,0,1
+3,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_e8c5c0a3-754b-42c1-bbfb-6487a8dd3c41.py,1,0,0,0,1
+4,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_5027d7fb-a798-4120-9df9-3df881c68949.py,1,2,2,0,0
+5,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_05f22037-b9ce-40fe-8d4e-e0014c8c66cf.py,1,0,3,0,0
+6,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_46442259-4a32-4923-9bdf-83fc47577a59.py,1,0,0,0,1
+7,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_d1fce6f6-0c61-4dde-aecd-89788b8756f1.py,1,0,0,0,1
+8,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_0870e334-93be-4b22-a2b8-6b3b0ef00893.py,1,1,3,0,0
+9,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_7ec3bc5f-493a-4ea2-bcd5-ddd963170c44.py,1,0,0,0,1
+10,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_8dce3703-5bff-4160-815e-585706fac496.py,1,0,0,0,1
+11,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_fdf7f1eb-0ecc-499e-8857-fd943c6ddd1e.py,1,4,0,0,0
+12,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_905f8521-4b2a-4cf3-9763-c8ba83f12b03.py,1,1,2,0,0
+13,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_2f1e9b13-3448-4cc1-ab4d-251732319722.py,1,2,0,0,0
+14,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_e518c9e9-2867-42a4-835b-b21de82b376b.py,1,0,0,0,1
+15,C:\Users\Ivan\PycharmProjects\auto-test-generator\dataset_repos\fake-calculator/gen_tests_evaluation/test_9cd8aabd-0cac-4105-a07d-2f2d50a765a4.py,1,0,0,0,1
