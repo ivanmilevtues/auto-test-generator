@@ -30,3 +30,6 @@ jobs:
       - run: python generate_tests_code.py
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
+        with:
+          title: 'Generated test code.'
+            body: This Pull request contains the automatically generated test code for your change.
