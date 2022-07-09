@@ -19,4 +19,4 @@ def convert_to_prefix(equation):
     return postfix.split(' ')[1:]
 
 def is_operand(ch):
-    return ch in ['+', '-', '/', '*', '^']
+    return ch in ['+', '-', '/', '*', '^', '%']
