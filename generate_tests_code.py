@@ -21,7 +21,7 @@ def generate_test(branch):
 
     for commit in data:
         saver = GeneratedTestSaver(str(path.absolute()), commit.commit_id, main_branch='master',
-                                   directory_for_generation=f'generated_tests_for_{commit.commit_id}')
+                                   directory_for_generation=f'./datasets/Calculator/generated_tests_for_{commit.commit_id}')
         for prompt in commit.construct_prompt():
             try:
                 tests = generator.generate(prompt)
